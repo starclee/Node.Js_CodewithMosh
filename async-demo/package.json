@@ -1,5 +1,5 @@
 {
-  "name": "express_demo",
+  "name": "async-demo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,11 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^5.0.0-beta.2",
-    "joi": "^17.13.3",
-    "pug": "^3.0.3",
-    "string-similarity": "^4.0.4"
-  }
+  "license": "ISC"
 }
