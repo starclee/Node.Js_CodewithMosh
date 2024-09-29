@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "config": "^3.3.12",
+    "debug": "^4.3.7",
+    "express": "^5.0.0-beta.2",
+    "joi": "^17.13.3",
+    "morgan": "^1.10.0"
+  }
+}
