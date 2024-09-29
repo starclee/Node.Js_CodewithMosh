@@ -1,35 +1,39 @@
-const debug = require("debug")("app:startup");
-const conDebug = require("debug")("app:config");
-
 const express = require("express");
-const config = require("config");
-
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+const config = require("config");
 
-const logger = require("./middleware/logger");
-const authentication = require("./middleware/authentication");
+if (!config.get("jwtPrivateKey")) {
+  console.log("FATEL ERROR: jwtPrivateKey is not defined");
+  process.exit(1);
+}
+
+mongoose
+  .connect("mongodb://localhost/vidly")
+  .then(() => console.log("Mongo DB connection established..."))
+  .catch((err) => console.error(err));
 
 const genres = require("./routes/genres");
+const customers = require("./routes/customers");
+const movies = require("./routes/movies");
+const rentals = require("./routes/rentals");
+const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 app.use(express.json());
-app.use(logger);
-app.use(authentication);
-app.use(express.urlencoded({ extended: true })); // for key value paired url can be converted into req.body format
-app.use(express.static("./public")); // to access the file in the node applciation
-
-debug("Env: ", app.get("env"));
 
 if (app.get("env") === "development") {
   app.use(morgan("short")); // for short logging purpose in the console
-  debug("Morgan Enabled...");
+  // debug("Morgan Enabled...");
 }
 
-conDebug("Name: ", config.get("name"));
-conDebug("Mail Server: ", config.get("mail.host"));
-conDebug("Mail Server Pwd: ", config.get("mail.password"));
-
 app.use("/api/genres", genres);
+app.use("/api/customers", customers);
+app.use("/api/movies", movies);
+app.use("/api/rentals", rentals);
+app.use("/api/users", users);
+app.use("/api/auth", auth);
 
-const portNo = process.env.PORT || 3000;
+const portNo = process.env.PORT || 3000; //$env:PORT=9000 to set env variables
 app.listen(portNo, () => console.log("Listening on port " + portNo));
