@@ -2,8 +2,19 @@ const express = require("express");
 const router = express.Router();
 const { Movie, movieValidation } = require("../models/movie");
 const { Genre } = require("../models/genre");
+const errorMiddleware = require("../middleware/asyncError.js");
+
+// router.get(
+//   "/",
+//   errorMiddleware(async (req, res) => {
+//     const movie = await Movie.find();
+//     console.log(`Movie:`, movie);
+//     res.send(movie);
+//   })
+// );
 
 router.get("/", async (req, res) => {
+  throw new Error("Couldn't get movies from the db");
   const movie = await Movie.find();
   console.log(`Movie:`, movie);
   res.send(movie);
