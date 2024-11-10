@@ -1,5 +1,6 @@
 const winston = require("winston");
 const mongoose = require("mongoose");
+const config = require("config");
 
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -11,7 +12,8 @@ const logger = winston.createLogger({
 });
 
 module.exports = function () {
+  let dbString = config.get("db");
   mongoose
-    .connect("mongodb://localhost/vidly")
-    .then(() => logger.info("MongoDB connection established..."));
+    .connect(dbString)
+    .then(() => logger.info(`Connected to ${dbString} ...`));
 };
