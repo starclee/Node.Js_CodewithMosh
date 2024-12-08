@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const moment = require("moment");
 
 // Define the rental schema
 const rentalSchema = new mongoose.Schema(
@@ -56,7 +57,7 @@ const rentalSchema = new mongoose.Schema(
     dateOut: {
       type: Date,
       required: true,
-      default: Date.now,
+      default: new Date(),
     },
     dateReturned: {
       type: Date,
@@ -69,6 +70,18 @@ const rentalSchema = new mongoose.Schema(
   { versionKey: false }
 ); // Disable the __v version key
 
+rentalSchema.statics.lookup = function (req) {
+  return this.findOne({
+    "customer._id": req.body.customerId,
+    "movie._id": req.body.movieId,
+  });
+};
+
+rentalSchema.methods.return = function () {
+  this.dateReturned = new Date();
+  let rentalDays = moment().diff(moment(this.dateOut), "days");
+  this.rentalFee = rentalDays * this.movie.dailyRentalRate;
+};
 // Create the Rental model
 const Rental = mongoose.model("Rental", rentalSchema);
 
