@@ -1,6 +1,7 @@
 require("express-async-errors");
 const winston = require("winston");
 require("winston-mongodb");
+let config = require("config");
 
 module.exports = () => {
   // process.on("uncaughtException", (ex) => {
@@ -33,7 +34,7 @@ module.exports = () => {
   winston.add(new winston.transports.File({ filename: "logFile.log" }));
   winston.add(
     new winston.transports.MongoDB({
-      db: "mongodb://localhost/vidly",
+      db: config.get("db"),
       level: "info", // error,warn,info will be logged
     })
   );
